@@ -15,24 +15,21 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Main {
-    private final static String[] GAMERTAGS = {"McDonalds79", "Cashius Playz", "dr treyy", "schoolboywu69", "Joevani JoJo"};
-    private final static String[] PLATFORM = {"xbl", "xbl", "xbl", "xbl", "xbl"};
+    private final static String[] GAMERTAGS = {"McDonalds79", "Cashius Playz", "dr treyy", "schoolboywu69", "Joevani JoJo", "kelloggking"};
+    private final static String[] PLATFORM = {"xbl", "xbl", "xbl", "xbl", "xbl", "xbl"};
     private final static int NUMOFGAMERTAGS = GAMERTAGS.length;
     private final static String[] FIELDS = {"kdRatio", "scorePerMinute", "topTwentyFive", "topFive", "timePlayed", "wins", "gamesPlayed"};
     private final static int NUMOFFIELDS = FIELDS.length;
-    private final static int MODE = 0; // 0 is OFFLINE 1 is ONLINE
-
+    private final static int MODE = 1; // 0 is OFFLINE 1 is ONLINE
+    private static ArrayList<Player> playerList = new ArrayList<Player>();
 
     public static void main(String[] args) throws Exception{
 
-        double[][] normalizedData;
-        ArrayList<Player> playerList = new ArrayList<Player>();
-
         if (MODE == 1) {
-            HttpResponse<JsonNode>[] responses = new HttpResponse[5];
+            HttpResponse<JsonNode>[] responses = new HttpResponse[NUMOFGAMERTAGS];
 
             // Make Api requests
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < NUMOFGAMERTAGS; i++) {
                 responses[i] = makeRequest(GAMERTAGS[i], PLATFORM[i]);
                 TimeUnit.SECONDS.sleep(1);
             }
@@ -42,36 +39,26 @@ public class Main {
             System.out.println("Printing player data");
             for (int j = 0; j < NUMOFGAMERTAGS; j++) {
                 System.out.println("\n" + GAMERTAGS[j]);
-                for (int i = 0; i < 7; i++) {
+                for (int i = 0; i < NUMOFFIELDS; i++) {
                     playerData[j][i] = Double.valueOf(responses[j].getBody().getObject().getJSONObject("lifetime").getJSONObject("mode").getJSONObject("br").getJSONObject("properties").get(FIELDS[i]).toString());
                     System.out.println(FIELDS[i] + ": " + playerData[j][i]);
                 }
-
-                //TODO Create player objects with raw data from the api & include data from last 20 games
 
                 // add players as the raw data is selected
                 playerList.add(new Player(playerData[j][0], playerData[j][1], (int)(playerData[j][1]), (int)playerData[j][1],
                         playerData[j][1], (int)playerData[j][1], (int)playerData[j][1],GAMERTAGS[j], PLATFORM[j]));
             }
 
-            // TODO double check all normalized data is being kept separate- some data we want normalized some we don't
-            // normalize the data
-            normalizedData = normalizeData(playerData);
-            for (double[] normalizedDatum : normalizedData) {
-                System.out.println();
-                for (int j = 0; j < normalizedData[0].length; j++) {
-                    System.out.print(normalizedDatum[j] + " ");
-                }
-            }
-
         }
+
+        // TODO: Make offline data usable again, does not work with new implementation
         else{
             // OR read in a (CURRENTLY) normalized only file for offline use
-            normalizedData = readInFile();
+
         }
 
         // get the calculated scores
-        double[] scores = calculateScores(normalizedData);
+        double[] scores = calculateScores();
 
         System.out.println("/nPrinting out scores....");
         for (int p = 0; p < NUMOFGAMERTAGS; p++){
@@ -116,6 +103,7 @@ public class Main {
         return response;
     }
 
+    // TODO: Determine if normalizing data is something needed or not
     // return the normalized stats
     // players are each row and stats are each column
     private static double[][] normalizeData(double rawStats[][]){
@@ -146,46 +134,46 @@ public class Main {
 
     // calculate the new "score" for each player using normalized stats higher score -> better player
     // "kdRatio", "scorePerMinute", "topTwentyFive", "topFive", "timePlayed", "wins", "gamesPlayed"
-    private static double[] calculateScores(double normalizedStats[][]){
-        double scores[] = new double[normalizedStats.length];
+    private static double[] calculateScores(){
+        double scores[] = new double[playerList.size()];
 
         // for each player
-        for(int player = 0; player < normalizedStats.length; player++){
-            // kd ratio * 10
-            double kd = normalizedStats[player][0] * 10.0;
+        for(int player = 0; player < playerList.size(); player++){
+            // Get time and games played
+            double timePlayed = playerList.get(player).getTimePlayed();
+            double gamesPlayed = playerList.get(player).getGamesPlayed();
 
-            // score per minute * 10
-            double spm = normalizedStats[player][1] * 10.0;
+            // kd ratio
+            double kd = playerList.get(player).getKd() * 2500;
 
-            // top 25 / time played * 5
-            double top25Time = normalizedStats[player][2] / normalizedStats[player][4] * 5.0;
+            // score per minute
+            double spm = playerList.get(player).getSpm() * 5;
 
-            // top 25 / gamesPlayed * 5
-            double top25Games = normalizedStats[player][2] / normalizedStats[player][6] * 5.0;
+            // top 25 / time played
+            double top25Time = playerList.get(player).getTop25()/timePlayed * 100;
 
-            // top 25 / time played * 10
-            double top5Time = normalizedStats[player][3] / normalizedStats[player][4] * 10.0;
+            // top 25 / gamesPlayed
+            double top25Games = playerList.get(player).getTop25()/gamesPlayed * 100;
+
+            // top 25 / time played
+            double top5Time = playerList.get(player).getTop25()/timePlayed * 100;
 
             // top 25 / gamesPlayed * 10
-            double top5Games = normalizedStats[player][3] / normalizedStats[player][6] * 15.0;
+            double top5Games = playerList.get(player).getTop25()/gamesPlayed * 100;
 
             // wins / timePlayed * 10
-            double winsTime = normalizedStats[player][5] / normalizedStats[player][4] * 15.0;
+            double winsTime = playerList.get(player).getWins()/timePlayed * 200;
 
             // wins / gamesPlayed * 20
-            double winsGames = normalizedStats[player][5] / normalizedStats[player][6] * 25.0;
+            double winsGames = playerList.get(player).getWins()/gamesPlayed * 200;
 
             // kd / gamesPlayed * 20
-            double kdGames = normalizedStats[player][0] / normalizedStats[player][6] * 20.0;
+            double kdGames = kd/gamesPlayed * 2;
 
-            // reward higher kd WITH a higher percentage of top 5 and top 25 finishes
-            double kd25 = (kd * 5.0) / (normalizedStats[player][2]/normalizedStats[player][6]);
-
-            double kd5 = (kd * 5.0) / (normalizedStats[player][3]/normalizedStats[player][6]);
 
             // ADD UP THE SCORES
             scores[player] = kd + spm + top25Time + top25Games + top5Time
-                    + top5Games + winsTime + winsGames + kdGames + kd25 + kd5;
+                    + top5Games + winsTime + winsGames + kdGames;
         }
 
         return scores;
