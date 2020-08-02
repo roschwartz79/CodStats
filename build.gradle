@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('http://repo.maven.apache.org/maven2')
+    }
+}
+
+dependencies {
+    implementation 'com.mashape.unirest:unirest-java:1.4.9'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'antlr:antlr:2.7.2'
+}
+
+group = 'CodStats'
+version = '1.0'
+sourceCompatibility = '1.8'
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'Main'
+        )
+    }
+}
+
+application {
+    mainClassName = 'Main'
+}

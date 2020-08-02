@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Main {
-    // TODO make an intput file with the gamertags and plat
+    // TODO make an input file with the gamertags and plat
     private final static String[] GAMERTAGS = {"McDonalds79", "Cashius Playz", "dr treyy", "schoolboywu69", "Joevani JoJo", "kelloggking","Crackrockjack", "Ccatania21"};
     private final static String[] PLATFORM = {"xbl", "xbl", "xbl", "xbl", "xbl", "xbl", "xbl", "xbl"};
     private final static int NUMOFGAMERTAGS = GAMERTAGS.length;
