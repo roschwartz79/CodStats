@@ -6,11 +6,28 @@ public class Player {
     private double timePlayed;
     private int wins;
     private int gamesPlayed;
+    private int downs;
+    private int contracts;
+    private int revives;
     private String gamertag;
     private String platform;
+    private double killsLast20;
+    private double killsPerGame;
+    private double objectiveTeamWiped;
+    private double avgLifetime;
+    private double distanceTraveled;
+    private double headshotPercentage;
+    private int gulagKills;
+    private double damageDone;
+    private double damageTaken;
+    private int objLastStandKill;
 
     public Player(double kd, double spm, int top25, int top5, double timePlayed,
-                  int wins, int gamesPlayed, String gamertag, String platform){
+                  int wins, int gamesPlayed, int downs,
+                  int contacts, int revives, double killsLast20, double killsPerGame,
+                  double objectiveTeamWiped, double avgLifetime, double distanceTraveled,
+                  double headshotPercentage, int gulagKills, double damageDone,
+                  double damageTaken, int objLastStandKill, String gamertag, String platform){
         this.kd = kd;
         this.spm = spm;
         this.top25 = top25;
@@ -20,6 +37,19 @@ public class Player {
         this.gamesPlayed = gamesPlayed;
         this.gamertag = gamertag;
         this.platform = platform;
+        this.downs = downs;
+        this.contracts = contacts;
+        this.revives = revives;
+        this.killsLast20 = killsLast20;
+        this.killsPerGame = killsPerGame;
+        this.objectiveTeamWiped = objectiveTeamWiped;
+        this.avgLifetime = avgLifetime;
+        this.distanceTraveled = distanceTraveled;
+        this.headshotPercentage = headshotPercentage;
+        this.gulagKills = gulagKills;
+        this.damageDone = damageDone;
+        this.damageTaken = damageTaken;
+        this.objLastStandKill = objLastStandKill;
     }
 
     public double getKd() {
@@ -92,6 +122,110 @@ public class Player {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public int getDowns() {
+        return downs;
+    }
+
+    public void setDowns(int downs) {
+        this.downs = downs;
+    }
+
+    public int getContracts() {
+        return contracts;
+    }
+
+    public void setContracts(int contracts) {
+        this.contracts = contracts;
+    }
+
+    public int getRevives() {
+        return revives;
+    }
+
+    public void setRevives(int revives) {
+        this.revives = revives;
+    }
+
+    public double getKillsLast20() {
+        return killsLast20;
+    }
+
+    public void setKillsLast20(double killsLast20) {
+        this.killsLast20 = killsLast20;
+    }
+
+    public double getKillsPerGame() {
+        return killsPerGame;
+    }
+
+    public void setKillsPerGame(double killsPerGame) {
+        this.killsPerGame = killsPerGame;
+    }
+
+    public double getObjectiveTeamWiped() {
+        return objectiveTeamWiped;
+    }
+
+    public void setObjectiveTeamWiped(double objectiveTeamWiped) {
+        this.objectiveTeamWiped = objectiveTeamWiped;
+    }
+
+    public double getAvgLifetime() {
+        return avgLifetime;
+    }
+
+    public void setAvgLifetime(double avgLifetime) {
+        this.avgLifetime = avgLifetime;
+    }
+
+    public double getDistanceTraveled() {
+        return distanceTraveled;
+    }
+
+    public void setDistanceTraveled(double distanceTraveled) {
+        this.distanceTraveled = distanceTraveled;
+    }
+
+    public double getHeadshotPercentage() {
+        return headshotPercentage;
+    }
+
+    public void setHeadshotPercentage(double headshotPercentage) {
+        this.headshotPercentage = headshotPercentage;
+    }
+
+    public int getGulagKills() {
+        return gulagKills;
+    }
+
+    public void setGulagKills(int gulagKills) {
+        this.gulagKills = gulagKills;
+    }
+
+    public double getDamageDone() {
+        return damageDone;
+    }
+
+    public void setDamageDone(double damageDone) {
+        this.damageDone = damageDone;
+    }
+
+    public double getDamageTaken() {
+        return damageTaken;
+    }
+
+    public void setDamageTaken(double damageTaken) {
+        this.damageTaken = damageTaken;
+    }
+
+    public int getObjLastStandKill() {
+        return objLastStandKill;
+    }
+
+    public void setObjLastStandKill(int objLastStandKill) {
+        this.objLastStandKill = objLastStandKill;
     }
 
     //TODO implement methods to return various percentages
