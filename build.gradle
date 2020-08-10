@@ -31,3 +31,7 @@ jar {
 application {
     mainClassName = 'Main'
 }
+
+run{
+    standardInput = System.in
+}

@@ -1,14 +1,14 @@
 public class Player {
     private double kd;
     private double spm;
-    private int top25;
-    private int top5;
+    private double top25;
+    private double top5;
     private double timePlayed;
-    private int wins;
-    private int gamesPlayed;
-    private int downs;
-    private int contracts;
-    private int revives;
+    private double wins;
+    private double gamesPlayed;
+    private double downs;
+    private double contracts;
+    private double revives;
     private String gamertag;
     private String platform;
     private double killsLast20;
@@ -17,17 +17,17 @@ public class Player {
     private double avgLifetime;
     private double distanceTraveled;
     private double headshotPercentage;
-    private int gulagKills;
+    private double gulagKills;
     private double damageDone;
     private double damageTaken;
-    private int objLastStandKill;
+    private double objLastStandKill;
 
-    public Player(double kd, double spm, int top25, int top5, double timePlayed,
-                  int wins, int gamesPlayed, int downs,
-                  int contacts, int revives, double killsLast20, double killsPerGame,
+    public Player(double kd, double spm, double top25, double top5, double timePlayed,
+                  double wins, double gamesPlayed, double downs,
+                  double contacts, double revives, double killsLast20, double killsPerGame,
                   double objectiveTeamWiped, double avgLifetime, double distanceTraveled,
-                  double headshotPercentage, int gulagKills, double damageDone,
-                  double damageTaken, int objLastStandKill, String gamertag, String platform){
+                  double headshotPercentage, double gulagKills, double damageDone,
+                  double damageTaken, double objLastStandKill, String gamertag, String platform){
         this.kd = kd;
         this.spm = spm;
         this.top25 = top25;
@@ -68,7 +68,7 @@ public class Player {
         this.spm = spm;
     }
 
-    public int getTop25() {
+    public double getTop25() {
         return top25;
     }
 
@@ -76,7 +76,7 @@ public class Player {
         this.top25 = top25;
     }
 
-    public int getTop5() {
+    public double getTop5() {
         return top5;
     }
 
@@ -92,7 +92,7 @@ public class Player {
         this.timePlayed = timePlayed;
     }
 
-    public int getWins() {
+    public double getWins() {
         return wins;
     }
 
@@ -100,7 +100,7 @@ public class Player {
         this.wins = wins;
     }
 
-    public int getGamesPlayed() {
+    public double getGamesPlayed() {
         return gamesPlayed;
     }
 
@@ -124,7 +124,7 @@ public class Player {
         this.platform = platform;
     }
 
-    public int getDowns() {
+    public double getDowns() {
         return downs;
     }
 
@@ -132,7 +132,7 @@ public class Player {
         this.downs = downs;
     }
 
-    public int getContracts() {
+    public double getContracts() {
         return contracts;
     }
 
@@ -140,7 +140,7 @@ public class Player {
         this.contracts = contracts;
     }
 
-    public int getRevives() {
+    public double getRevives() {
         return revives;
     }
 
@@ -196,7 +196,7 @@ public class Player {
         this.headshotPercentage = headshotPercentage;
     }
 
-    public int getGulagKills() {
+    public double getGulagKills() {
         return gulagKills;
     }
 
@@ -220,7 +220,7 @@ public class Player {
         this.damageTaken = damageTaken;
     }
 
-    public int getObjLastStandKill() {
+    public double getObjLastStandKill() {
         return objLastStandKill;
     }
 
