@@ -9,6 +9,7 @@ import java.util.Scanner;
 public class FileHandler implements FileInterface{
     File file = new File("playerdata.txt");
     APIHandler apiHandler = new APIHandler();
+    PlayerHandler playerHandler = new PlayerHandler();
     public static ArrayList<Player> playerList = new ArrayList<Player>();
 
 
@@ -45,6 +46,7 @@ public class FileHandler implements FileInterface{
                         Double.parseDouble(splitData[12]), Double.parseDouble(splitData[13]), Double.parseDouble(splitData[14]),
                         Double.parseDouble(splitData[15]), Double.parseDouble(splitData[16]), Double.parseDouble(splitData[17]),
                         Double.parseDouble(splitData[18]), Double.parseDouble(splitData[19]), splitData[20], splitData[21]));
+                playerHandler.addPlayerToTrack(splitData[20]);
             }
             myReader.close();
         }
@@ -60,6 +62,12 @@ public class FileHandler implements FileInterface{
     }
 
     public void addPlayerData(String gamertag, String platform) throws Exception {
+        // If the player has already been tracked
+        if (playerHandler.getPlayersCurrentlyTracked().contains(gamertag)){
+            System.out.println("This player is already being tracked.");
+            return;
+        }
+
         ArrayList<HttpResponse<JsonNode>> response = apiHandler.makeRequest(gamertag, platform);
 
         double[] playerData = new double[NUMOFFIELDS];
@@ -95,6 +103,8 @@ public class FileHandler implements FileInterface{
         catch(Exception e){
             System.out.println("\nThere was an error adding " + gamertag + " on " + platform +".\nCheck for the correct gamertag and platform.");
         }
+        // add the player to be tracked
+        playerHandler.addPlayerToTrack(gamertag);
 
     }
 
