@@ -1,7 +1,15 @@
+import com.mongodb.*;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+
+import javax.sql.rowset.serial.SQLOutputImpl;
 import javax.swing.*;
 import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -38,6 +46,7 @@ public class Main {
                     printScores(scores);
                     break;
                 case "7":
+                    System.out.println("Exiting from mongodb....");
                     System.exit(0);
             }
 

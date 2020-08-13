@@ -1,6 +1,10 @@
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.sun.tools.jdeprscan.scan.Scan;
+import org.bson.Document;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -62,13 +66,23 @@ public class FileHandler implements FileInterface{
     }
 
     public void addPlayerData(String gamertag, String platform) throws Exception {
+        System.out.println("Connecting to the Database...");
+        MongoClient mongoClient = new MongoClient();
+
+        MongoDatabase database = mongoClient.getDatabase("PlayerData");
+        MongoCollection collection = database.getCollection("Gamertags");
+        long numPlayers = collection.countDocuments();
+
+        System.out.println("Database connection successful");
+
+
         // If the player has already been tracked
         if (playerHandler.getPlayersCurrentlyTracked().contains(gamertag)){
             System.out.println("This player is already being tracked.");
             return;
         }
 
-        ArrayList<HttpResponse<JsonNode>> response = apiHandler.makeRequest(gamertag, platform);
+        ArrayList<HttpResponse<JsonNode>> response = APIHandler.makeRequest(gamertag, platform);
 
         double[] playerData = new double[NUMOFFIELDS];
 
@@ -81,6 +95,20 @@ public class FileHandler implements FileInterface{
                 playerData[j + 10] = Double.parseDouble(response.get(1).getBody().getObject().getJSONObject("summary").getJSONObject("all").
                         get(FIELDS[j+10]).toString());
             }
+
+            // Add the player to the Database
+            Document gamertags = new Document("id", (int)numPlayers).append("GMTG", gamertag).append("KD", playerData[0])
+                    .append("SPM", playerData[1]).append("TP25", playerData[2])
+                    .append("TP5", playerData[3]).append("TP", playerData[4])
+                    .append("WINS", playerData[5]).append("GP", playerData[6])
+                    .append("DWNS", playerData[7]).append("CNTR", playerData[8])
+                    .append("REV", playerData[9]).append("KILL20", playerData[10])
+                    .append("KPG", playerData[11]).append("TMWP", playerData[12])
+                    .append("AVGLF", playerData[13]).append("DSTTRV", playerData[14])
+                    .append("HDSHTPCT", playerData[15]).append("GLGKL", playerData[16])
+                    .append("DMGD", playerData[17]).append("DMGT", playerData[18])
+                    .append("LSTSTND", playerData[19]).append("PLT", platform);
+            collection.insertOne(gamertags);
 
             // Add the player to the current playerList
             playerList.add(new Player(playerData[0], playerData[1], (int) playerData[2], (int) playerData[3], playerData[4], (int) playerData[5],
@@ -106,6 +134,7 @@ public class FileHandler implements FileInterface{
         // add the player to be tracked
         playerHandler.addPlayerToTrack(gamertag);
 
+        mongoClient.close();
     }
 
     public static ArrayList<Player> getPlayerList() {

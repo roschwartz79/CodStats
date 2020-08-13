@@ -24,7 +24,7 @@ public class Player {
 
     public Player(double kd, double spm, double top25, double top5, double timePlayed,
                   double wins, double gamesPlayed, double downs,
-                  double contacts, double revives, double killsLast20, double killsPerGame,
+                  double contracts, double revives, double killsLast20, double killsPerGame,
                   double objectiveTeamWiped, double avgLifetime, double distanceTraveled,
                   double headshotPercentage, double gulagKills, double damageDone,
                   double damageTaken, double objLastStandKill, String gamertag, String platform){
@@ -38,7 +38,7 @@ public class Player {
         this.gamertag = gamertag;
         this.platform = platform;
         this.downs = downs;
-        this.contracts = contacts;
+        this.contracts = contracts;
         this.revives = revives;
         this.killsLast20 = killsLast20;
         this.killsPerGame = killsPerGame;
