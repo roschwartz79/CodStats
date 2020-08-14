@@ -8,11 +8,6 @@ public class PlayerHandler implements PlayerInterface{
         return playersCurrentlyTracked;
     }
 
-    public void addPlayerToTrack(String gamertag){
-        playersCurrentlyTracked.add(gamertag);
-        return;
-    }
-
     // TODO: When the program creates a new player list, it should be done through here
     public void createPlayerList() {
 

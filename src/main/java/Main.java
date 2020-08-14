@@ -1,45 +1,36 @@
-import com.mongodb.*;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
-
-import javax.sql.rowset.serial.SQLOutputImpl;
 import javax.swing.*;
 import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 
 
 public class Main {
-    public static FileHandler fileHandler = new FileHandler();
+    public static DBHandler DBHandler = new DBHandler();
     public static Scanner scanner = new Scanner(System.in);
 
 
     public static void main(String[] args) throws Exception{
 
         while(true){
-            System.out.println("\nPick an option:\n(0) Create a player data file\n(1) Read in an existing player data file\n(2) Add a new player\n(3) Compute and print scores" +
+            System.out.println("\nPick an option:\n(1) Get an existing players data\n(2) Add a new player\n(3) Compute and print scores" +
                     "\n(7) exit");
 
             String userInput = scanner.nextLine();
 
             switch (userInput) {
-                case "0":
-                    fileHandler.createFile();
-                    break;
                 case "1":
-                    fileHandler.readCachedFile();
+                    System.out.println("Enter the gamertag of the player you want to view: ");
+                    String gamertagInput1 = scanner.nextLine();
+                    DBHandler.getPlayerData(gamertagInput1);
                     break;
                 case "2":
-                    System.out.printf("Enter the gamertag of the player you want to add: ");
-                    String gamertagInput = scanner.nextLine();
-                    System.out.printf("Enter the platform: Xbox (xbl) Playstation (psn) Activision name (uno) or Steam (steam): ");
-                    String platformInput = scanner.nextLine();
-                    fileHandler.addPlayerData(gamertagInput, platformInput);
+                    System.out.println("Enter the gamertag of the player you want to add: ");
+                    String gamertagInput2 = scanner.nextLine();
+                    System.out.println("Enter the platform: Xbox (xbl) Playstation (psn) Activision name (uno) or Steam (steam): ");
+                    String platformInput2 = scanner.nextLine();
+                    DBHandler.addPlayerData(gamertagInput2, platformInput2);
                     break;
                 case "3":
                     double[] scores = calculateScores();
@@ -47,6 +38,7 @@ public class Main {
                     break;
                 case "7":
                     System.out.println("Exiting from mongodb....");
+                    DBHandler.closeDBConn();
                     System.exit(0);
             }
 
@@ -56,11 +48,8 @@ public class Main {
     // calculate the new "score" for each player using normalized stats higher score -> better player
     // "kdRatio", "scorePerMinute", "topTwentyFive", "topFive", "timePlayed", "wins", "gamesPlayed"
     private static double[] calculateScores() throws FileNotFoundException {
-        if (FileHandler.getPlayerList().size() == 0){
-            System.out.println("Reading in the default data file...");
-            fileHandler.readCachedFile();
-        }
-        ArrayList<Player> playerList = FileHandler.getPlayerList();
+        //TODO: Update scores method- make a scores class and get player data out of the DB
+        ArrayList<Player> playerList = DBInterface.getPlayerList();
 
         double scores[] = new double[playerList.size()];
         // for each player
@@ -135,9 +124,9 @@ public class Main {
     // Print out the data
     public static void printScores(double[] scores) throws PrinterException {
         String[] columnNames = {"Name", "Score"};
-        Object[][] data = new Object[FileHandler.playerList.size()][2];
-        for(int i = 0; i<FileHandler.playerList.size(); i++){
-            data[i][0] = FileHandler.playerList.get(i).getGamertag();
+        Object[][] data = new Object[DBHandler.playerList.size()][2];
+        for(int i = 0; i< DBHandler.playerList.size(); i++){
+            data[i][0] = DBHandler.playerList.get(i).getGamertag();
             data[i][1] = scores[i];
         }
 
