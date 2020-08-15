@@ -16,6 +16,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'antlr:antlr:2.7.2'
     compile 'org.mongodb:mongo-java-driver:3.12.7'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.2'
 }
 
 group = 'CodStats'
