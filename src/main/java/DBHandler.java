@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Projections.*;
 
-public class DBHandler implements DBInterface {
 
+public class DBHandler implements DBInterface {
     public static ArrayList<Player> playerList = new ArrayList<Player>();
     private static final MongoClientURI uri = new MongoClientURI(
             "mongodb+srv://USER_ROB_SCHWARTZ:"
@@ -33,14 +33,11 @@ public class DBHandler implements DBInterface {
 
 
     public void updatePlayerData(String gamertag, String platform) throws Exception {
-        MongoCollection<Document> gamertagsCollection = database.getCollection("Gamertags");
         MongoCollection<Document> dataCollection = database.getCollection("Data");
         MongoCollection<Document> scoreCollection = database.getCollection("Scores");
 
         System.out.println("Receiving updated data...");
         ArrayList<HttpResponse<JsonNode>> response = APIHandler.makeRequest(gamertag, platform);
-
-        long numPlayers = gamertagsCollection.countDocuments();
 
         double[] playerData = new double[NUMOFFIELDS];
 
@@ -87,8 +84,6 @@ public class DBHandler implements DBInterface {
         catch(Exception e){
             System.out.println("\nThere was an error updating " + gamertag + " on " + platform +".\nCheck for the correct gamertag and platform.");
         }
-
-
     }
 
     public void addPlayerData(String gamertag, String platform) throws Exception {
@@ -102,6 +97,13 @@ public class DBHandler implements DBInterface {
         MongoCollection<Document> gamertagsCollection = database.getCollection("Gamertags");
         MongoCollection<Document> dataCollection = database.getCollection("Data");
         MongoCollection<Document> scoreCollection = database.getCollection("Scores");
+
+        for (Document cur : gamertagsCollection.find().projection(fields(include("Gamertag", "Score"), excludeId()))) {
+            if (cur.get("Gamertag").equals(gamertag)){
+                System.out.println("This gamertag has already been added to the database.");
+                return;
+            }
+        }
 
         long numPlayers = gamertagsCollection.countDocuments();
 

@@ -3,7 +3,8 @@ import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Main {
@@ -12,6 +13,10 @@ public class Main {
 
 
     public static void main(String[] args) throws Exception{
+
+        // Disable Mongo logging except for severe statements
+        Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
+        mongoLogger.setLevel(Level.SEVERE);
 
         while(true){
             System.out.println("\nPick an option:\n(1) Get an existing players data\n(2) Add a new player" +
