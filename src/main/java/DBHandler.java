@@ -150,7 +150,6 @@ public class DBHandler implements DBInterface {
             // Insert into the document
             scoreCollection.insertOne(new Document("Gamertag", gamertag).append("id", (int)numPlayers).append("Score", score));
 
-
             System.out.println("\nSuccessfully added " + gamertag + " to the database");
         }
         catch(Exception e){
