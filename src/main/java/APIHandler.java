@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class APIHandler implements APIInterface{
 
     // perform the api request and return all raw JSON data
-    public ArrayList<HttpResponse<JsonNode>> makeRequest(String gamerTag, String platform) throws Exception{
+    public static ArrayList<HttpResponse<JsonNode>> makeRequest(String gamerTag, String platform) throws Exception{
         ArrayList<HttpResponse<JsonNode>> responseList = new ArrayList<>();
 
         HttpResponse<JsonNode> multiplayerResponse = Unirest.get("https://call-of-duty-modern-warfare.p.rapidapi.com/multiplayer/" + gamerTag +"/" + platform)
