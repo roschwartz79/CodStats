@@ -20,7 +20,7 @@ public class Main {
 
         while(true){
             System.out.println("\nPick an option:\n(1) Get an existing players data\n(2) Add a new player" +
-                    "\n(3) Update a player in the DB\n(4) Compute and print scores" +
+                    "\n(3) Update a player in the DB\n(4) Update all players\n(5) Compute and print scores" +
                     "\n(7) exit");
 
             String userInput = scanner.nextLine();
@@ -44,7 +44,11 @@ public class Main {
                     System.out.println("Enter the platform: Xbox (xbl) Playstation (psn) Activision name (uno) or Steam (steam): ");
                     String platformInput3 = scanner.nextLine();
                     DBHandler.updatePlayerData(gamertagInput3, platformInput3);
+                    break;
                 case "4":
+                    DBHandler.updateAll();
+                    break;
+                case "5":
                     double[] scores = DBHandler.getScores();
                     //printScores(scores);
                     break;

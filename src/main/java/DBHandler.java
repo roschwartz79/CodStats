@@ -4,12 +4,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -30,6 +32,82 @@ public class DBHandler implements DBInterface {
             "downs", "contracts", "revives","kills", "killsPerGame", "objectiveTeamWiped", "avgLifeTime", "distanceTraveled", "headshotPercentage",
             "gulagKills", "damageDone", "damageTaken", "objectiveLastStandKill"};
     private final static int NUMOFFIELDS = FIELDS.length;
+
+    public void updateAll() throws Exception {
+        MongoCollection<Document> dataCollection = database.getCollection("Data");
+        MongoCollection<Document> scoreCollection = database.getCollection("Scores");
+        MongoCollection<Document> gamertagsCollection = database.getCollection("Gamertags");
+
+        int len = (int) gamertagsCollection.countDocuments();
+
+        System.out.println("Receiving updated data...");
+
+        for (int i = 0; i < len; i++) {
+            Document curDoc = gamertagsCollection.find(new Document("id", i)).first();
+            String gamertag = String.valueOf(curDoc.get("Gamertag"));
+
+            Document pltDoc = dataCollection.find(new Document("GMTG", gamertag)).first();
+            String platform = String.valueOf(pltDoc.get("PLT"));
+
+            ArrayList<HttpResponse<JsonNode>> response = APIHandler.makeRequest(gamertag, platform);
+
+            double[] playerData = new double[NUMOFFIELDS];
+
+
+            try {
+                for (int j = 0; j < NUMOFFIELDS / 2; j++) {
+                    // Data from the Multi API endpoint
+                    playerData[j] = Double.parseDouble(response.get(0).getBody().getObject().getJSONObject("lifetime").getJSONObject("mode").
+                            getJSONObject("br").getJSONObject("properties").get(FIELDS[j]).toString());
+                    // Data from the WZ API endpoint
+                    playerData[j + 10] = Double.parseDouble(response.get(1).getBody().getObject().getJSONObject("summary").getJSONObject("all").
+                            get(FIELDS[j + 10]).toString());
+                }
+
+                // Add the player to the Database
+                Document data = new Document("GMTG", gamertag).append("KD", playerData[0])
+                        .append("SPM", playerData[1]).append("TP25", playerData[2])
+                        .append("TP5", playerData[3]).append("TP", playerData[4])
+                        .append("WINS", playerData[5]).append("GP", playerData[6])
+                        .append("DWNS", playerData[7]).append("CNTR", playerData[8])
+                        .append("REV", playerData[9]).append("KILL20", playerData[10])
+                        .append("KPG", playerData[11]).append("TMWP", playerData[12])
+                        .append("AVGLF", playerData[13]).append("DSTTRV", playerData[14])
+                        .append("HDSHTPCT", playerData[15]).append("GLGKL", playerData[16])
+                        .append("DMGD", playerData[17]).append("DMGT", playerData[18])
+                        .append("LSTSTND", playerData[19]);
+                dataCollection.updateOne(eq("GMTG", gamertag), new Document("$set", data));
+
+                System.out.println("Added to database");
+
+                // Create player object to calculate a score from
+                Player insertedPlayer = new Player((playerData[0]), (playerData[1]), (playerData[2]),
+                        (playerData[3]), (playerData[4]), (playerData[5]),
+                        (playerData[6]), (playerData[7]), (playerData[8]),
+                        (playerData[9]), (playerData[10]), (playerData[11]),
+                        (playerData[12]), (playerData[13]), (playerData[14]),
+                        (playerData[15]), (playerData[16]), (playerData[17]),
+                        (playerData[18]), (playerData[19]), gamertag, platform);
+
+                System.out.println("inserting");
+
+                double score = Score.getScore(insertedPlayer);
+
+                System.out.println("Got score");
+
+                // Insert into the document
+                Document scoreDoc = new Document("Score", score);
+                scoreCollection.updateOne(eq("Gamertag",gamertag),new Document("$set", scoreDoc));
+
+                System.out.println("has been inserted");
+
+                System.out.println("\nSuccessfully updated " + gamertag + " in the database");
+            } catch (Exception e) {
+                System.out.println("\nThere was an error updating " + gamertag + ".\nTry again in a litte. ");
+                return;
+            }
+        }
+    }
 
 
     public void updatePlayerData(String gamertag, String platform) throws Exception {
@@ -74,9 +152,12 @@ public class DBHandler implements DBInterface {
                     (playerData[15]), (playerData[16]), (playerData[17]),
                     (playerData[18]), (playerData[19]), gamertag, platform);
 
+
             double score = Score.getScore(insertedPlayer);
+
             // Insert into the document
-            scoreCollection.updateOne(eq("Gamertag",gamertag),new Document("Score", score));
+            Document scoreDoc = new Document("Score", score);
+            scoreCollection.updateOne(eq("Gamertag",gamertag),new Document("$set", scoreDoc));
 
 
             System.out.println("\nSuccessfully updated " + gamertag + " in the database");
@@ -109,6 +190,9 @@ public class DBHandler implements DBInterface {
 
         System.out.println("Receiving data...");
         ArrayList<HttpResponse<JsonNode>> response = APIHandler.makeRequest(gamertag, platform);
+
+
+
 
         double[] playerData = new double[NUMOFFIELDS];
 
