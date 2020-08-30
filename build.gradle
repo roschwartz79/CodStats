@@ -17,10 +17,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'antlr:antlr:2.7.2'
     compile 'org.mongodb:mongo-java-driver:3.12.7'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.2'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
     implementation 'org.codehaus.groovy:groovy-all:3.0.5'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+    implementation 'org.mockito:mockito-core:3.5.7'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
 }
 
 group = 'CodStats'
@@ -45,4 +46,6 @@ run{
 
 test {
     useJUnitPlatform()
+    include 'src/main/java/**'
 }
+

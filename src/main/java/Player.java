@@ -1,231 +1,233 @@
 public class Player {
-    private double kd;
-    private double spm;
-    private double top25;
-    private double top5;
-    private double timePlayed;
-    private double wins;
-    private double gamesPlayed;
-    private double downs;
-    private double contracts;
-    private double revives;
-    private String gamertag;
-    private String platform;
-    private double killsLast20;
-    private double killsPerGame;
-    private double objectiveTeamWiped;
-    private double avgLifetime;
-    private double distanceTraveled;
-    private double headshotPercentage;
-    private double gulagKills;
-    private double damageDone;
-    private double damageTaken;
-    private double objLastStandKill;
 
-    public Player(double kd, double spm, double top25, double top5, double timePlayed,
+    // To use Jackson Streaming, var names must match DB keys
+    public double KD;
+    public double SPM;
+    public double TP25;
+    public double TP5;
+    public double TP;
+    public double WINS;
+    public double GP;
+    public double DWNS;
+    public double CNTR;
+    public double REV;
+    public String GMTG;
+    public String PLT;
+    public double KILL20;
+    public double KPG;
+    public double TMWP;
+    public double AVGLF;
+    public double DSTTRV;
+    public double HDSHTPCT;
+    public double GLGKL;
+    public double DMGD;
+    public double DMGT;
+    public double LSTSTND;
+
+    public Player(double KD, double spm, double top25, double top5, double timePlayed,
                   double wins, double gamesPlayed, double downs,
                   double contracts, double revives, double killsLast20, double killsPerGame,
                   double objectiveTeamWiped, double avgLifetime, double distanceTraveled,
                   double headshotPercentage, double gulagKills, double damageDone,
                   double damageTaken, double objLastStandKill, String gamertag, String platform){
-        this.kd = kd;
-        this.spm = spm;
-        this.top25 = top25;
-        this.top5 = top5;
-        this.timePlayed = timePlayed;
-        this.wins = wins;
-        this.gamesPlayed = gamesPlayed;
-        this.gamertag = gamertag;
-        this.platform = platform;
-        this.downs = downs;
-        this.contracts = contracts;
-        this.revives = revives;
-        this.killsLast20 = killsLast20;
-        this.killsPerGame = killsPerGame;
-        this.objectiveTeamWiped = objectiveTeamWiped;
-        this.avgLifetime = avgLifetime;
-        this.distanceTraveled = distanceTraveled;
-        this.headshotPercentage = headshotPercentage;
-        this.gulagKills = gulagKills;
-        this.damageDone = damageDone;
-        this.damageTaken = damageTaken;
-        this.objLastStandKill = objLastStandKill;
+        this.KD = KD;
+        this.SPM = spm;
+        this.TP25 = top25;
+        this.TP5 = top5;
+        this.TP = timePlayed;
+        this.WINS = wins;
+        this.GP = gamesPlayed;
+        this.GMTG = gamertag;
+        this.PLT = platform;
+        this.DWNS = downs;
+        this.CNTR = contracts;
+        this.REV = revives;
+        this.KILL20 = killsLast20;
+        this.KPG = killsPerGame;
+        this.TMWP = objectiveTeamWiped;
+        this.AVGLF = avgLifetime;
+        this.DSTTRV = distanceTraveled;
+        this.HDSHTPCT = headshotPercentage;
+        this.GLGKL = gulagKills;
+        this.DMGD = damageDone;
+        this.DMGT = damageTaken;
+        this.LSTSTND = objLastStandKill;
     }
 
-    public double getKd() {
-        return kd;
+    public double getKD() {
+        return KD;
     }
 
-    public void setKd(double kd) {
-        this.kd = kd;
+    public void setKD(double KD) {
+        this.KD = KD;
     }
 
-    public double getSpm() {
-        return spm;
+    public double getSPM() {
+        return SPM;
     }
 
-    public void setSpm(double spm) {
-        this.spm = spm;
+    public void setSPM(double SPM) {
+        this.SPM = SPM;
     }
 
-    public double getTop25() {
-        return top25;
+    public double getTP25() {
+        return TP25;
     }
 
-    public void setTop25(int top25) {
-        this.top25 = top25;
+    public void setTP25(int TP25) {
+        this.TP25 = TP25;
     }
 
-    public double getTop5() {
-        return top5;
+    public double getTP5() {
+        return TP5;
     }
 
-    public void setTop5(int top5) {
-        this.top5 = top5;
+    public void setTP5(int TP5) {
+        this.TP5 = TP5;
     }
 
-    public double getTimePlayed() {
-        return timePlayed;
+    public double getTP() {
+        return TP;
     }
 
-    public void setTimePlayed(double timePlayed) {
-        this.timePlayed = timePlayed;
+    public void setTP(double TP) {
+        this.TP = TP;
     }
 
-    public double getWins() {
-        return wins;
+    public double getWINS() {
+        return WINS;
     }
 
-    public void setWins(int wins) {
-        this.wins = wins;
+    public void setWINS(int WINS) {
+        this.WINS = WINS;
     }
 
-    public double getGamesPlayed() {
-        return gamesPlayed;
+    public double getGP() {
+        return GP;
     }
 
-    public void setGamesPlayed(int gamesPlayed) {
-        this.gamesPlayed = gamesPlayed;
+    public void setGP(int GP) {
+        this.GP = GP;
     }
 
-    public String getGamertag() {
-        return gamertag;
+    public String getGMTG() {
+        return GMTG;
     }
 
-    public void setGamertag(String gamertag) {
-        this.gamertag = gamertag;
+    public void setGMTG(String GMTG) {
+        this.GMTG = GMTG;
     }
 
-    public String getPlatform() {
-        return platform;
+    public String getPLT() {
+        return PLT;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
+    public void setPLT(String PLT) {
+        this.PLT = PLT;
     }
 
-    public double getDowns() {
-        return downs;
+    public double getDWNS() {
+        return DWNS;
     }
 
-    public void setDowns(int downs) {
-        this.downs = downs;
+    public void setDWNS(int DWNS) {
+        this.DWNS = DWNS;
     }
 
-    public double getContracts() {
-        return contracts;
+    public double getCNTR() {
+        return CNTR;
     }
 
-    public void setContracts(int contracts) {
-        this.contracts = contracts;
+    public void setCNTR(int CNTR) {
+        this.CNTR = CNTR;
     }
 
-    public double getRevives() {
-        return revives;
+    public double getREV() {
+        return REV;
     }
 
-    public void setRevives(int revives) {
-        this.revives = revives;
+    public void setREV(int REV) {
+        this.REV = REV;
     }
 
-    public double getKillsLast20() {
-        return killsLast20;
+    public double getKILL20() {
+        return KILL20;
     }
 
-    public void setKillsLast20(double killsLast20) {
-        this.killsLast20 = killsLast20;
+    public void setKILL20(double KILL20) {
+        this.KILL20 = KILL20;
     }
 
-    public double getKillsPerGame() {
-        return killsPerGame;
+    public double getKPG() {
+        return KPG;
     }
 
-    public void setKillsPerGame(double killsPerGame) {
-        this.killsPerGame = killsPerGame;
+    public void setKPG(double KPG) {
+        this.KPG = KPG;
     }
 
-    public double getObjectiveTeamWiped() {
-        return objectiveTeamWiped;
+    public double getTMWP() {
+        return TMWP;
     }
 
-    public void setObjectiveTeamWiped(double objectiveTeamWiped) {
-        this.objectiveTeamWiped = objectiveTeamWiped;
+    public void setTMWP(double TMWP) {
+        this.TMWP = TMWP;
     }
 
-    public double getAvgLifetime() {
-        return avgLifetime;
+    public double getAVGLF() {
+        return AVGLF;
     }
 
-    public void setAvgLifetime(double avgLifetime) {
-        this.avgLifetime = avgLifetime;
+    public void setAVGLF(double AVGLF) {
+        this.AVGLF = AVGLF;
     }
 
-    public double getDistanceTraveled() {
-        return distanceTraveled;
+    public double getDSTTRV() {
+        return DSTTRV;
     }
 
-    public void setDistanceTraveled(double distanceTraveled) {
-        this.distanceTraveled = distanceTraveled;
+    public void setDSTTRV(double DSTTRV) {
+        this.DSTTRV = DSTTRV;
     }
 
-    public double getHeadshotPercentage() {
-        return headshotPercentage;
+    public double getHDSHTPCT() {
+        return HDSHTPCT;
     }
 
-    public void setHeadshotPercentage(double headshotPercentage) {
-        this.headshotPercentage = headshotPercentage;
+    public void setHDSHTPCT(double HDSHTPCT) {
+        this.HDSHTPCT = HDSHTPCT;
     }
 
-    public double getGulagKills() {
-        return gulagKills;
+    public double getGLGKL() {
+        return GLGKL;
     }
 
-    public void setGulagKills(int gulagKills) {
-        this.gulagKills = gulagKills;
+    public void setGLGKL(int GLGKL) {
+        this.GLGKL = GLGKL;
     }
 
-    public double getDamageDone() {
-        return damageDone;
+    public double getDMGD() {
+        return DMGD;
     }
 
-    public void setDamageDone(double damageDone) {
-        this.damageDone = damageDone;
+    public void setDMGD(double DMGD) {
+        this.DMGD = DMGD;
     }
 
-    public double getDamageTaken() {
-        return damageTaken;
+    public double getDMGT() {
+        return DMGT;
     }
 
-    public void setDamageTaken(double damageTaken) {
-        this.damageTaken = damageTaken;
+    public void setDMGT(double DMGT) {
+        this.DMGT = DMGT;
     }
 
-    public double getObjLastStandKill() {
-        return objLastStandKill;
+    public double getLSTSTND() {
+        return LSTSTND;
     }
 
-    public void setObjLastStandKill(int objLastStandKill) {
-        this.objLastStandKill = objLastStandKill;
+    public void setLSTSTND(int LSTSTND) {
+        this.LSTSTND = LSTSTND;
     }
 
     //TODO implement methods to return various percentages

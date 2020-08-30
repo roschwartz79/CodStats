@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.print.PrinterException;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +47,7 @@ public class Main {
                     DBHandler.updateAll();
                     break;
                 case "5":
-                    double[] scores = DBHandler.getScores();
+                    double[] scores = DBHandler.updateAndGetScores();
                     //printScores(scores);
                     break;
                 case "7":
@@ -66,7 +64,7 @@ public class Main {
         String[] columnNames = {"Name", "Score"};
         Object[][] data = new Object[DBHandler.playerList.size()][2];
         for(int i = 0; i< DBHandler.playerList.size(); i++){
-            data[i][0] = DBHandler.playerList.get(i).getGamertag();
+            data[i][0] = DBHandler.playerList.get(i).getGMTG();
             data[i][1] = scores[i];
         }
 

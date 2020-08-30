@@ -1,3 +1,5 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -78,8 +80,6 @@ public class DBHandler implements DBInterface {
                         .append("LSTSTND", playerData[19]);
                 dataCollection.updateOne(eq("GMTG", gamertag), new Document("$set", data));
 
-                System.out.println("Added to database");
-
                 // Create player object to calculate a score from
                 Player insertedPlayer = new Player((playerData[0]), (playerData[1]), (playerData[2]),
                         (playerData[3]), (playerData[4]), (playerData[5]),
@@ -89,17 +89,11 @@ public class DBHandler implements DBInterface {
                         (playerData[15]), (playerData[16]), (playerData[17]),
                         (playerData[18]), (playerData[19]), gamertag, platform);
 
-                System.out.println("inserting");
-
                 double score = Score.getScore(insertedPlayer);
-
-                System.out.println("Got score");
 
                 // Insert into the document
                 Document scoreDoc = new Document("Score", score);
                 scoreCollection.updateOne(eq("Gamertag",gamertag),new Document("$set", scoreDoc));
-
-                System.out.println("has been inserted");
 
                 System.out.println("\nSuccessfully updated " + gamertag + " in the database");
             } catch (Exception e) {
@@ -271,8 +265,24 @@ public class DBHandler implements DBInterface {
     }
 
     
-    public double[] getScores(){
+    public double[] updateAndGetScores() throws JsonProcessingException {
         MongoCollection<Document> scoreCollection = database.getCollection("Scores");
+        MongoCollection<Document> dataCollection = database.getCollection("Data");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+//        for (Document cur : dataCollection.find().projection(fields(exclude("id"),excludeId()))) {
+//            System.out.println(cur.toJson());
+//            // map json to a player
+//            Player player = objectMapper.readValue(cur.toJson(), Player.class);
+//
+//            // get an updated score
+//            double score = Score.getScore(player);
+//
+//            // Insert into the document
+//            Document scoreDoc = new Document("Score", score);
+//            scoreCollection.updateOne(eq("Gamertag",cur.get("GMTG")),new Document("$set", scoreDoc));
+//        }
 
         for (Document cur : scoreCollection.find().projection(fields(include("Gamertag", "Score"), excludeId()))) {
             System.out.println(cur.toJson());
@@ -280,6 +290,8 @@ public class DBHandler implements DBInterface {
 
         return null;
     }
+
+
 
 
 }
