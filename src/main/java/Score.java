@@ -1,10 +1,11 @@
+import java.util.ArrayList;
+
 public class Score {
 
     public static double getScore(Player player){
         // Get time and games played
         double timePlayed =player.getTP();
         double gamesPlayed =player.getGP();
-
 
         //System.out.println("\nDATA START FOR " +player.getGamertag());
         // kd ratio
@@ -62,6 +63,12 @@ public class Score {
                 + avgLife + damageDone;
 
         return score;
+    }
+
+    // TODO sort the socres in ascending order.
+    public static ArrayList sortScores(){
+
+        return new ArrayList();
     }
 
 }

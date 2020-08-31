@@ -1,58 +1,54 @@
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+@JsonAutoDetect
 public class Player {
 
-    // To use Jackson Streaming, var names must match DB keys
+    // For Jackson JSON Streaming
+    @JsonProperty("KD")
     public double KD;
+    @JsonProperty("SPM")
     public double SPM;
+    @JsonProperty("TP25")
     public double TP25;
+    @JsonProperty("TP5")
     public double TP5;
+    @JsonProperty("TP")
     public double TP;
+    @JsonProperty("WINS")
     public double WINS;
+    @JsonProperty("GP")
     public double GP;
+    @JsonProperty("DWNS")
     public double DWNS;
+    @JsonProperty("CNTR")
     public double CNTR;
+    @JsonProperty("REV")
     public double REV;
+    @JsonProperty("GMTG")
     public String GMTG;
+    @JsonProperty("PLT")
     public String PLT;
+    @JsonProperty("KILL20")
     public double KILL20;
+    @JsonProperty("KPG")
     public double KPG;
+    @JsonProperty("TMWP")
     public double TMWP;
+    @JsonProperty("AVGLF")
     public double AVGLF;
+    @JsonProperty("DSTTRV")
     public double DSTTRV;
+    @JsonProperty("HDSHTPCT")
     public double HDSHTPCT;
+    @JsonProperty("GLGKL")
     public double GLGKL;
+    @JsonProperty("DMGD")
     public double DMGD;
+    @JsonProperty("DMGT")
     public double DMGT;
+    @JsonProperty("LSTSTND")
     public double LSTSTND;
-
-    public Player(double KD, double spm, double top25, double top5, double timePlayed,
-                  double wins, double gamesPlayed, double downs,
-                  double contracts, double revives, double killsLast20, double killsPerGame,
-                  double objectiveTeamWiped, double avgLifetime, double distanceTraveled,
-                  double headshotPercentage, double gulagKills, double damageDone,
-                  double damageTaken, double objLastStandKill, String gamertag, String platform){
-        this.KD = KD;
-        this.SPM = spm;
-        this.TP25 = top25;
-        this.TP5 = top5;
-        this.TP = timePlayed;
-        this.WINS = wins;
-        this.GP = gamesPlayed;
-        this.GMTG = gamertag;
-        this.PLT = platform;
-        this.DWNS = downs;
-        this.CNTR = contracts;
-        this.REV = revives;
-        this.KILL20 = killsLast20;
-        this.KPG = killsPerGame;
-        this.TMWP = objectiveTeamWiped;
-        this.AVGLF = avgLifetime;
-        this.DSTTRV = distanceTraveled;
-        this.HDSHTPCT = headshotPercentage;
-        this.GLGKL = gulagKills;
-        this.DMGD = damageDone;
-        this.DMGT = damageTaken;
-        this.LSTSTND = objLastStandKill;
-    }
 
     public double getKD() {
         return KD;

@@ -1,3 +1,4 @@
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -55,7 +56,6 @@ public class DBHandler implements DBInterface {
 
             double[] playerData = new double[NUMOFFIELDS];
 
-
             try {
                 for (int j = 0; j < NUMOFFIELDS / 2; j++) {
                     // Data from the Multi API endpoint
@@ -79,21 +79,6 @@ public class DBHandler implements DBInterface {
                         .append("DMGD", playerData[17]).append("DMGT", playerData[18])
                         .append("LSTSTND", playerData[19]);
                 dataCollection.updateOne(eq("GMTG", gamertag), new Document("$set", data));
-
-                // Create player object to calculate a score from
-                Player insertedPlayer = new Player((playerData[0]), (playerData[1]), (playerData[2]),
-                        (playerData[3]), (playerData[4]), (playerData[5]),
-                        (playerData[6]), (playerData[7]), (playerData[8]),
-                        (playerData[9]), (playerData[10]), (playerData[11]),
-                        (playerData[12]), (playerData[13]), (playerData[14]),
-                        (playerData[15]), (playerData[16]), (playerData[17]),
-                        (playerData[18]), (playerData[19]), gamertag, platform);
-
-                double score = Score.getScore(insertedPlayer);
-
-                // Insert into the document
-                Document scoreDoc = new Document("Score", score);
-                scoreCollection.updateOne(eq("Gamertag",gamertag),new Document("$set", scoreDoc));
 
                 System.out.println("\nSuccessfully updated " + gamertag + " in the database");
             } catch (Exception e) {
@@ -137,23 +122,6 @@ public class DBHandler implements DBInterface {
                     .append("LSTSTND", playerData[19]);
             dataCollection.updateOne(eq("GMTG", gamertag), new Document("$set", data));
 
-            // Create player object to calculate a score from
-            Player insertedPlayer = new Player((playerData[0]), (playerData[1]), (playerData[2]),
-                    (playerData[3]), (playerData[4]), (playerData[5]),
-                    (playerData[6]), (playerData[7]), (playerData[8]),
-                    (playerData[9]), (playerData[10]), (playerData[11]),
-                    (playerData[12]), (playerData[13]), (playerData[14]),
-                    (playerData[15]), (playerData[16]), (playerData[17]),
-                    (playerData[18]), (playerData[19]), gamertag, platform);
-
-
-            double score = Score.getScore(insertedPlayer);
-
-            // Insert into the document
-            Document scoreDoc = new Document("Score", score);
-            scoreCollection.updateOne(eq("Gamertag",gamertag),new Document("$set", scoreDoc));
-
-
             System.out.println("\nSuccessfully updated " + gamertag + " in the database");
         }
         catch(Exception e){
@@ -185,9 +153,6 @@ public class DBHandler implements DBInterface {
         System.out.println("Receiving data...");
         ArrayList<HttpResponse<JsonNode>> response = APIHandler.makeRequest(gamertag, platform);
 
-
-
-
         double[] playerData = new double[NUMOFFIELDS];
 
         try {
@@ -214,19 +179,6 @@ public class DBHandler implements DBInterface {
                     .append("LSTSTND", playerData[19]).append("PLT", platform);
             dataCollection.insertOne(gamertags);
             gamertagsCollection.insertOne(new Document("id", (int)numPlayers).append("Gamertag", gamertag));
-
-            // Create player object to calculate a score from
-            Player insertedPlayer = new Player((playerData[0]), (playerData[1]), (playerData[2]),
-                    (playerData[3]), (playerData[4]), (playerData[5]),
-                    (playerData[6]), (playerData[7]), (playerData[8]),
-                    (playerData[9]), (playerData[10]), (playerData[11]),
-                    (playerData[12]), (playerData[13]), (playerData[14]),
-                    (playerData[15]), (playerData[16]), (playerData[17]),
-                    (playerData[18]), (playerData[19]), gamertag, platform);
-
-            double score = Score.getScore(insertedPlayer);
-            // Insert into the document
-            scoreCollection.insertOne(new Document("Gamertag", gamertag).append("id", (int)numPlayers).append("Score", score));
 
             System.out.println("\nSuccessfully added " + gamertag + " to the database");
         }
@@ -271,18 +223,20 @@ public class DBHandler implements DBInterface {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-//        for (Document cur : dataCollection.find().projection(fields(exclude("id"),excludeId()))) {
-//            System.out.println(cur.toJson());
-//            // map json to a player
-//            Player player = objectMapper.readValue(cur.toJson(), Player.class);
-//
-//            // get an updated score
-//            double score = Score.getScore(player);
-//
-//            // Insert into the document
-//            Document scoreDoc = new Document("Score", score);
-//            scoreCollection.updateOne(eq("Gamertag",cur.get("GMTG")),new Document("$set", scoreDoc));
-//        }
+        ArrayList<String> scoreList = new ArrayList();
+
+        // Go through each doc in the collection
+        for (Document cur : dataCollection.find().projection(fields(exclude("id"),excludeId()))) {
+            // map json to a player
+            Player player = objectMapper.readValue(cur.toJson(), Player.class);
+
+            // get an updated score
+            double score = Score.getScore(player);
+
+            // Update the new score into the db
+            Document scoreDoc = new Document("Score", score);
+            scoreCollection.updateOne(eq("Gamertag",cur.get("GMTG")),new Document("$set", scoreDoc));
+        }
 
         for (Document cur : scoreCollection.find().projection(fields(include("Gamertag", "Score"), excludeId()))) {
             System.out.println(cur.toJson());
