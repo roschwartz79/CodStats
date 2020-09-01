@@ -56,11 +56,18 @@ public class Score {
         double teamWipes =player.getTMWP() * 10.0;
         //System.out.println("team wipes*10: " + teamWipes);
 
+        double gulagKills = player.getGLGKL() * 10;
+
+        double distTraveled = player.getDSTTRV() /  100000;
+
+        double revives = (player.getREV() / gamesPlayed) * 40;
+
         //System.out.println("DATA END");
         // ADD UP THE SCORES
         double score = kd + spm + top25Time + top25Games + top5Time
                 + top5Games + winsTime + winsGames + headshotPercentage
-                + avgLife + damageDone;
+                + avgLife + damageDone + teamWipes + gulagKills + distTraveled
+                + revives;
 
         return score;
     }

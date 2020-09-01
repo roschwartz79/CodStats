@@ -43,7 +43,7 @@ public class DBHandler implements DBInterface {
 
         int len = (int) gamertagsCollection.countDocuments();
 
-        System.out.println("Receiving updated data...");
+        System.out.println("Updating");
 
         for (int i = 0; i < len; i++) {
             Document curDoc = gamertagsCollection.find(new Document("id", i)).first();
@@ -80,7 +80,7 @@ public class DBHandler implements DBInterface {
                         .append("LSTSTND", playerData[19]);
                 dataCollection.updateOne(eq("GMTG", gamertag), new Document("$set", data));
 
-                System.out.println("\nSuccessfully updated " + gamertag + " in the database");
+                System.out.print(".");
             } catch (Exception e) {
                 System.out.println("\nThere was an error updating " + gamertag + ".\nTry again in a litte. ");
                 return;
@@ -230,15 +230,25 @@ public class DBHandler implements DBInterface {
             // map json to a player
             Player player = objectMapper.readValue(cur.toJson(), Player.class);
 
+            double oldScore = Double.parseDouble(scoreCollection.find(new Document("Gamertag", cur.get("GMTG"))).first().get("Score").toString());
+
             // get an updated score
             double score = Score.getScore(player);
 
+            // configure trends
+            String trend;
+            if (oldScore > score){ trend = "DOWN"; }
+            else if ( oldScore < score) { trend = "UP"; }
+            else { trend = "NONE"; }
+
             // Update the new score into the db
-            Document scoreDoc = new Document("Score", score);
+            Document scoreDoc = new Document("Score", score).append("Trend", trend);
             scoreCollection.updateOne(eq("Gamertag",cur.get("GMTG")),new Document("$set", scoreDoc));
+
+
         }
 
-        for (Document cur : scoreCollection.find().projection(fields(include("Gamertag", "Score"), excludeId()))) {
+        for (Document cur : scoreCollection.find().projection(fields(include("Gamertag", "Score", "Trend"), excludeId()))) {
             System.out.println(cur.toJson());
         }
 
