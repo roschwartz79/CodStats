@@ -19,7 +19,7 @@ public class Main {
         while(true){
             System.out.println("\nPick an option:\n(1) Get an existing players data\n(2) Add a new player" +
                     "\n(3) Update a player in the DB\n(4) Update all players\n(5) Compute and print scores" +
-                    "\n(7) exit");
+                    "\n(6) Create a group\n(7) exit");
 
             String userInput = scanner.nextLine();
 
@@ -47,9 +47,13 @@ public class Main {
                     DBHandler.updateAll();
                     break;
                 case "5":
-                    double[] scores = DBHandler.updateAndGetScores();
+                    System.out.println("Do you want to update the trends? (Y/N)");
+                    String updateTrends = scanner.nextLine();
+                    double[] scores = DBHandler.updateAndGetScores(updateTrends);
                     //printScores(scores);
                     break;
+                case "6":
+                    DBHandler.createDBGroup();
                 case "7":
                     System.out.println("Exiting from mongodb....");
                     DBHandler.closeDBConn();

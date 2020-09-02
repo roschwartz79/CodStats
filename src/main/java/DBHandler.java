@@ -16,8 +16,10 @@ import org.bson.Document;
 
 import javax.print.Doc;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 import static com.mongodb.client.model.Projections.*;
 
 
@@ -35,6 +37,7 @@ public class DBHandler implements DBInterface {
             "downs", "contracts", "revives","kills", "killsPerGame", "objectiveTeamWiped", "avgLifeTime", "distanceTraveled", "headshotPercentage",
             "gulagKills", "damageDone", "damageTaken", "objectiveLastStandKill"};
     private final static int NUMOFFIELDS = FIELDS.length;
+    public static Scanner scanner = new Scanner(System.in);
 
     public void updateAll() throws Exception {
         MongoCollection<Document> dataCollection = database.getCollection("Data");
@@ -43,7 +46,7 @@ public class DBHandler implements DBInterface {
 
         int len = (int) gamertagsCollection.countDocuments();
 
-        System.out.println("Updating");
+        System.out.print("Updating");
 
         for (int i = 0; i < len; i++) {
             Document curDoc = gamertagsCollection.find(new Document("id", i)).first();
@@ -217,7 +220,7 @@ public class DBHandler implements DBInterface {
     }
 
     
-    public double[] updateAndGetScores() throws JsonProcessingException {
+    public double[] updateAndGetScores(String updateTrends) throws JsonProcessingException {
         MongoCollection<Document> scoreCollection = database.getCollection("Scores");
         MongoCollection<Document> dataCollection = database.getCollection("Data");
 
@@ -242,7 +245,9 @@ public class DBHandler implements DBInterface {
             else { trend = "NONE"; }
 
             // Update the new score into the db
-            Document scoreDoc = new Document("Score", score).append("Trend", trend);
+            Document scoreDoc;
+            if (updateTrends.equalsIgnoreCase("y")){ scoreDoc = new Document("Score", score).append("Trend", trend); }
+            else { scoreDoc = new Document("Score", score); }
             scoreCollection.updateOne(eq("Gamertag",cur.get("GMTG")),new Document("$set", scoreDoc));
 
 
@@ -255,7 +260,46 @@ public class DBHandler implements DBInterface {
         return null;
     }
 
+    public void createDBGroup(){
+        MongoCollection<Document> groupsCollection = database.getCollection("Groups");
 
 
+        String groupName = null;
+        ArrayList<String> gamertags = new ArrayList<>();
+
+        boolean checked = true;
+        while(checked) {
+            System.out.println("Enter the name of the group: ");
+            groupName = scanner.nextLine();
+
+            boolean inColl = false;
+            for (Document cur : groupsCollection.find()) {
+                if (cur.get("Group").equals(groupName)){
+                    System.out.println("This group has already been added to the database. Update or delete the group.");
+                    inColl = true;
+                }
+            }
+
+            if (!inColl) {
+                checked = false;
+            }
+
+        } ;
+
+        String userIn = "d";
+        while  (userIn.equalsIgnoreCase("d")) {
+            System.out.println("Add player gamertag to " + groupName + ",press D when you are finished, or enter Q to exit.");
+            userIn = scanner.nextLine();
+
+            if (userIn.equalsIgnoreCase("q")){ return; }
+
+            String gamertag2add = scanner.nextLine();
+            gamertags.add(gamertag2add);
+        }
+
+        // add the array to the collection
+        groupsCollection.insertOne(new Document(groupName, gamertags.toArray()));
+        System.out.println("Successfully created the " + groupName + " collection.");
+    }
 
 }
