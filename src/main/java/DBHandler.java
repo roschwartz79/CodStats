@@ -182,8 +182,17 @@ public class DBHandler implements DBInterface {
                     .append("LSTSTND", playerData[19]).append("PLT", platform);
             dataCollection.insertOne(gamertags);
             gamertagsCollection.insertOne(new Document("id", (int)numPlayers).append("Gamertag", gamertag));
-
             System.out.println("\nSuccessfully added " + gamertag + " to the database");
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            Player player = objectMapper.readValue(dataCollection.find(new Document("GMTG", gamertag)).projection(fields(exclude("id"),excludeId()))
+                    .first().toJson(), Player.class);
+            System.out.println("Made player");
+            double score = Score.getScore(player);
+            System.out.println("Got score");
+            scoreCollection.insertOne(new Document("Gamertag", gamertag).append("id", (int)numPlayers).append("Score", score).append("Trend", "None"));
+
+            System.out.println("\nSuccessfully added " + gamertag + "'s score to the database");
         }
         catch(Exception e){
             System.out.println("\nThere was an error adding " + gamertag + " on " + platform +".\nCheck for the correct gamertag and platform.");
